@@ -46,7 +46,7 @@ by default it is recommended to create db called `<sbtest>`. it is default db na
 sudo mysql -u root -p
 ```
 ```sql
-mysql>  create database sbtest;
+mysql> create database sbtest;
 mysql> exit
 ```
 
@@ -55,12 +55,39 @@ mysql> exit
 you can you any configuration of sysbench tests. However we already prepare script for you. 
 run `run_test.sh` and wait. 
 
+```bash
+./run_test.sh -u root -p "your_root_password" -d sbtest
+```
+
+keys for `run_test.sh`:
+> -u -- (mandatory) user name for connecting to mySql DB. mandatory.
+> -p -- (mandatory) user password for connecting to mySql DB.
+> -d -- (optional. Default - sbtest) target database for tor testing
+
+by default test result logs will be storred and folder `logs` (created automatically same folder with `run_test.sh`).
+After each iteration logfiles would be reloaded.
+
+##### helpful note:
 there could be some problem how to run it on remote machihe where `run_test.sh` does not exist. 
 reccomendation: use scp for upload script there.
 
 ```bash
-scp -i path/your_ssh_key.pem -r /Users/YOUR_USER/path/run_test.sh ubuntu@remote_host:/home/YOUR_REMOTE_USER/logs
+scp -i path/your_ssh_key.pem -r /Users/YOUR_USER/path/run_test.sh ubuntu@remote_host:/home/YOUR_REMOTE_USER/
 ```
+
+
+# Collect logs
+
+for collecting logs it is reccomended to use `scp`
+and store it in different places from each tested server.
+
+scp -i path/your_ssh_key.pem -r ubuntu@remote_host:/home/%YOUR_REMOTE_USER%/logs /Users/%YOUR_USER%/logs/%unique_seerver_name%
+
+# Generating data.table for analysis.
+> for this action you should have some `R` knowledge.
+
+Inside `sysbench_spu_test.R` you would need to setup root folder to your logs `/Users/%YOUR_USER%/logs/` and runn full script. 
+as result script would read all logs in folder and parse it to one data.table structure for furcther analysis.
 
 
 
