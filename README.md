@@ -61,8 +61,11 @@ run `run_test.sh` and wait.
 
 keys for `run_test.sh`:
 > -u -- (mandatory) user name for connecting to mySql DB. mandatory.
+> 
 > -p -- (mandatory) user password for connecting to mySql DB.
+> 
 > -d -- (optional. Default - sbtest) target database for tor testing
+> 
 
 by default test result logs will be storred and folder `logs` (created automatically same folder with `run_test.sh`).
 After each iteration logfiles would be reloaded.
@@ -81,7 +84,10 @@ scp -i path/your_ssh_key.pem -r /Users/YOUR_USER/path/run_test.sh ubuntu@remote_
 for collecting logs it is reccomended to use `scp`
 and store it in different places from each tested server.
 
+```bash
 scp -i path/your_ssh_key.pem -r ubuntu@remote_host:/home/%YOUR_REMOTE_USER%/logs /Users/%YOUR_USER%/logs/%unique_seerver_name%
+```
+
 
 # Generating data.table for analysis.
 > for this action you should have some `R` knowledge.
