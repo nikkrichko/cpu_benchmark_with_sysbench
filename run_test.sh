@@ -78,7 +78,7 @@ do
 
             for test_type in oltp_read_only oltp_write_only oltp_read_write
             do
-                test_name="db_test_"$test_type"_time_"$iter_time"_threads_"$iter_threads"_iter_size_"$iter_size".log"
+                test_name="db_test_"$test_type"_time_"$iter_time"_threads_"$iter_threads"_iter_"$iter_size".log"
                 echo "RUN DB test" $test_name
                 
                 sudo sysbench $test_type --time=$iter_time --threads=$iter_threads --table-size=$iter_size --mysql-user=$mysql_user --mysql-password=$root_pass --db-driver=mysql --mysql-db=$mysql_db run > logs/$test_name
