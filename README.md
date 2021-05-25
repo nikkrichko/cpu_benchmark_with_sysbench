@@ -99,8 +99,11 @@ in next step it would prepare pictures for comparing
 
 # Examples of comparing result:
 plot grid:
+
 rows -- Test names
+
 columns -- Number of threads during tests
+
 #### CPU test
 
 ![ouch we lost the picture](00_CPU_latencies_plot.png "Simple cpu test - latencies")
