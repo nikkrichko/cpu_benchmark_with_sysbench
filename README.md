@@ -9,7 +9,7 @@ there are 3 main steps:
 1.2.1. configure mysql db
 1.2.2. create new test db
 2. run the test on VM
-3. collect logs and generate data.table ready for analysisand comparasion
+3. collect logs and generate data.table ready for analysis and comparasion
 
 ##### important note:
 > examples would be provided for sysbench 1.0.18
