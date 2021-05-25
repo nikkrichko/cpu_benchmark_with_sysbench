@@ -96,6 +96,24 @@ Inside `analysis.R` you would need to setup root folder to your logs `/Users/%YO
 as result script would read all logs in folder and parse it to one data.table structure for furcther analysis.
 in next step it would prepare pictures for comparing
 
+# Examples of comparing result:
 
+#### CPU test
+
+![ouch we lost the picture](00_CPU_latencies_plot.png "Simple cpu test - latencies")
+
+![ouch we lost the picture](00_CPU_other_plot.png "Simple cpu test - other")
+
+
+#### DB test
+
+
+![ouch we lost the picture](00_DB_operations.png "DB test - operations")
+
+![ouch we lost the picture](00_DB_transaction_plot.png "DB test -  transaction")
+
+![ouch we lost the picture](00_DB_latencies_plot.png "DB test - latencies")
+
+![ouch we lost the picture](00_DB_other_plot.png "DB test - other")
 
 
