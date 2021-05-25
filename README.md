@@ -92,8 +92,9 @@ scp -i path/your_ssh_key.pem -r ubuntu@remote_host:/home/%YOUR_REMOTE_USER%/logs
 # Generating data.table for analysis.
 > for this action you should have some `R` knowledge.
 
-Inside `sysbench_spu_test.R` you would need to setup root folder to your logs `/Users/%YOUR_USER%/logs/` and runn full script. 
+Inside `analysis.R` you would need to setup root folder to your logs `/Users/%YOUR_USER%/logs/` and run full script. 
 as result script would read all logs in folder and parse it to one data.table structure for furcther analysis.
+in next step it would prepare pictures for comparing
 
 
 
