@@ -38,5 +38,5 @@ run_test(){
 add_start_annotation $1 $2
 ($3)
 add_finish_annotation $1 $2
-get_cpu_info > $log_folder/$1_benchmark.json
+get_cpu_info > $log_folder/$1_cpu_01_benchmark.json
 }
