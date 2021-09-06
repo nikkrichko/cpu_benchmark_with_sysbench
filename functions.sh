@@ -34,7 +34,7 @@ curl -u admin:admin --location --request POST 'http://'$grafana_dns'/graph/api/d
 }
 
 
-run_some_test(){
+run_test(){
 add_start_annotation $1 $2
 ($3)
 add_finish_annotation $1 $2
