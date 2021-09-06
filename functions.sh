@@ -11,3 +11,14 @@ hello_arg(){
 add_annotation(){
 pmm-admin annotate "hello function world $1" --node --tags "$2"
 }
+
+get_cpu_info(){
+curl -u admin:admin --location --request POST 'http://'$grafana_dns'/graph/api/datasources/proxy/1/api/v1/query_range' \
+--header 'accept: application/json, text/plain, */*' \
+--header 'x-grafana-org-id: 1' \
+--header 'content-type: application/x-www-form-urlencoded' \
+--data-urlencode 'query=avg by (node_name,mode) (clamp_max(((avg by (mode,node_name) ( (clamp_max(rate(node_cpu_seconds_total{node_name="'$my_nodename'",mode!="idle"}[5m]),1)) or (clamp_max(irate(node_cpu_seconds_total{node_name="'$my_nodename'",mode!="idle"}[5m]),1)) ))*100 or (avg_over_time(node_cpu_average{node_name="'$my_nodename'", mode!="total", mode!="idle"}[5m]) or avg_over_time(node_cpu_average{node_name="'$my_nodename'", mode!="total", mode!="idle"}[5m]))),100))' \
+--data-urlencode 'end='$start_ts'' \
+--data-urlencode 'start='$end_ts'' \
+--data-urlencode 'step=20'
+}
