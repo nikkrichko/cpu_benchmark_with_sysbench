@@ -38,5 +38,7 @@ run_test(){
 add_start_annotation $1 $2
 ($3)
 add_finish_annotation $1 $2
-get_cpu_info > $log_folder/$1_cpu_01_benchmark.json
+sudo mkdir -v $log_folder/$1
+sudo chmod 777 $log_folder/$1
+get_cpu_info > $log_folder/$1/cpu_01_log.json
 }
