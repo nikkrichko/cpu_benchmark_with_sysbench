@@ -33,6 +33,15 @@ curl -u admin:admin --location --request POST 'http://'$grafana_dns'/graph/api/d
 --data-urlencode 'step=10'
 }
 
+add_web_log(){
+datetime=$(date)
+sudo systemctl stop apache2
+sudo chmod 777 /var/www/html/index.html
+sudo echo "<br><br><font color='green'>$datetime $1" >> /var/www/html/index.html
+sudo systemctl start apache2
+}
+
+
 
 run_test(){
 add_start_annotation $1 $2
