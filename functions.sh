@@ -263,26 +263,38 @@ get_resource(){
 
 
 get_virt_memory_used(){
-    resourse_query="avg by (node_name) (\n((avg_over_time(node_memory_MemTotal_bytes{node_name=\"$node_name\"}[5s]) or avg_over_time(node_memory_MemTotal_bytes{node_name=\"$node_name\"}[5m])) +\n(avg_over_time(node_memory_SwapTotal_bytes{node_name=\"$node_name\"}[5s]) or avg_over_time(node_memory_SwapTotal_bytes{node_name=\"$node_name\"}[5m]))) -\n((avg_over_time(node_memory_SwapFree_bytes{node_name=\"$node_name\"}[5s]) or avg_over_time(node_memory_SwapFree_bytes{node_name=\"$node_name\"}[5m])) + ((avg_over_time(node_memory_MemAvailable_bytes{node_name=\"$node_name\"}[5s]) or avg_over_time(node_memory_MemAvailable_bytes{node_name=\"$node_name\"}[5m])) or\n((avg_over_time(node_memory_MemFree_bytes{node_name=\"$node_name\"}[5s]) or avg_over_time(node_memory_MemFree_bytes{node_name=\"$node_name\"}[5m]))+\n(avg_over_time(node_memory_Buffers_bytes{node_name=\"$node_name\"}[5s]) or avg_over_time(node_memory_Buffers_bytes{node_name=\"$node_name\"}[5m]))+\n(avg_over_time(node_memory_Cached_bytes{node_name=\"$node_name\"}[5s]) or avg_over_time(node_memory_Cached_bytes{node_name=\"$node_name\"}[5m])))))\n)"
 
-    get_resource
+        curl -u admin:admin --location --request POST 'http://'$grafana_dns'/graph/api/datasources/proxy/1/api/v1/query_range' \
+--header 'accept: application/json, text/plain, */*' \
+--header 'x-grafana-org-id: 1' \
+--header 'content-type: application/x-www-form-urlencoded' \
+--data-urlencode 'query=avg by (node_name) (\n((avg_over_time(node_memory_MemTotal_bytes{node_name=\"$node_name\"}[5s]) or avg_over_time(node_memory_MemTotal_bytes{node_name=\"$node_name\"}[5m])) +\n(avg_over_time(node_memory_SwapTotal_bytes{node_name=\"$node_name\"}[5s]) or avg_over_time(node_memory_SwapTotal_bytes{node_name=\"$node_name\"}[5m]))) -\n((avg_over_time(node_memory_SwapFree_bytes{node_name=\"$node_name\"}[5s]) or avg_over_time(node_memory_SwapFree_bytes{node_name=\"$node_name\"}[5m])) + ((avg_over_time(node_memory_MemAvailable_bytes{node_name=\"$node_name\"}[5s]) or avg_over_time(node_memory_MemAvailable_bytes{node_name=\"$node_name\"}[5m])) or\n((avg_over_time(node_memory_MemFree_bytes{node_name=\"$node_name\"}[5s]) or avg_over_time(node_memory_MemFree_bytes{node_name=\"$node_name\"}[5m]))+\n(avg_over_time(node_memory_Buffers_bytes{node_name=\"$node_name\"}[5s]) or avg_over_time(node_memory_Buffers_bytes{node_name=\"$node_name\"}[5m]))+\n(avg_over_time(node_memory_Cached_bytes{node_name=\"$node_name\"}[5s]) or avg_over_time(node_memory_Cached_bytes{node_name=\"$node_name\"}[5m])))))\n)' \
+--data-urlencode 'end='$start_ts'' \
+--data-urlencode 'start='$end_ts'' \
+--data-urlencode 'step=10'
 }
 
 
 get_virtual_memory_available(){
-    resourse_query="avg by (node_name) (\n(avg_over_time(node_memory_SwapFree_bytes{node_name=\"$node_name\"}[5s]) or avg_over_time(node_memory_SwapFree_bytes{node_name=\"$node_name\"}[5m])) + ((avg_over_time(node_memory_MemAvailable_bytes{node_name=\"$node_name\"}[5s]) or avg_over_time(node_memory_MemAvailable_bytes{node_name=\"$node_name\"}[5m])) or\n((avg_over_time(node_memory_MemFree_bytes{node_name=\"$node_name\"}[5s]) or avg_over_time(node_memory_MemFree_bytes{node_name=\"$node_name\"}[5m]))+\n(avg_over_time(node_memory_Buffers_bytes{node_name=\"$node_name\"}[5s]) or avg_over_time(node_memory_Buffers_bytes{node_name=\"$node_name\"}[5m]))+\n(avg_over_time(node_memory_Cached_bytes{node_name=\"$node_name\"}[5s]) or avg_over_time(node_memory_Cached_bytes{node_name=\"$node_name\"}[5m]))))\n)"
-
-    get_resource
+        curl -u admin:admin --location --request POST 'http://'$grafana_dns'/graph/api/datasources/proxy/1/api/v1/query_range' \
+--header 'accept: application/json, text/plain, */*' \
+--header 'x-grafana-org-id: 1' \
+--header 'content-type: application/x-www-form-urlencoded' \
+--data-urlencode 'query=avg by (node_name) (\n(avg_over_time(node_memory_SwapFree_bytes{node_name=\"$node_name\"}[5s]) or avg_over_time(node_memory_SwapFree_bytes{node_name=\"$node_name\"}[5m])) + ((avg_over_time(node_memory_MemAvailable_bytes{node_name=\"$node_name\"}[5s]) or avg_over_time(node_memory_MemAvailable_bytes{node_name=\"$node_name\"}[5m])) or\n((avg_over_time(node_memory_MemFree_bytes{node_name=\"$node_name\"}[5s]) or avg_over_time(node_memory_MemFree_bytes{node_name=\"$node_name\"}[5m]))+\n(avg_over_time(node_memory_Buffers_bytes{node_name=\"$node_name\"}[5s]) or avg_over_time(node_memory_Buffers_bytes{node_name=\"$node_name\"}[5m]))+\n(avg_over_time(node_memory_Cached_bytes{node_name=\"$node_name\"}[5s]) or avg_over_time(node_memory_Cached_bytes{node_name=\"$node_name\"}[5m]))))\n)' \
+--data-urlencode 'end='$start_ts'' \
+--data-urlencode 'start='$end_ts'' \
+--data-urlencode 'step=10'
 }
 
 get_virtual_momory_total(){
-    resourse_query="avg by (node_name) ((avg_over_time(node_memory_MemTotal_bytes{node_name="'$my_nodename'"}[5s]) or avg_over_time(node_memory_MemTotal_bytes{node_name="'$my_nodename'"}[5m])) + \n(avg_over_time(node_memory_SwapTotal_bytes{node_name="'$my_nodename'"}[5s]) or avg_over_time(node_memory_SwapTotal_bytes{node_name="'$my_nodename'"}[5m])))"
+        curl -u admin:admin --location --request POST 'http://'$grafana_dns'/graph/api/datasources/proxy/1/api/v1/query_range' \
+--header 'accept: application/json, text/plain, */*' \
+--header 'x-grafana-org-id: 1' \
+--header 'content-type: application/x-www-form-urlencoded' \
+--data-urlencode 'avg by (node_name) ((avg_over_time(node_memory_MemTotal_bytes{node_name="'$my_nodename'"}[5s]) or avg_over_time(node_memory_MemTotal_bytes{node_name="'$my_nodename'"}[5m])) + \n(avg_over_time(node_memory_SwapTotal_bytes{node_name="'$my_nodename'"}[5s]) or avg_over_time(node_memory_SwapTotal_bytes{node_name="'$my_nodename'"}[5m])))' \
+--data-urlencode 'end='$start_ts'' \
+--data-urlencode 'start='$end_ts'' \
+--data-urlencode 'step=10'
 
-    get_resource
-}
-
-get_cpu_exp(){
-    resourse_query="avg by (node_name,mode) (clamp_max(((avg by (mode,node_name) ( (clamp_max(rate(node_cpu_seconds_total{node_name="'$my_nodename'",mode!="idle"}[5m]),1)) or (clamp_max(irate(node_cpu_seconds_total{node_name="'$my_nodename'",mode!="idle"}[5m]),1)) ))*100 or (avg_over_time(node_cpu_average{node_name="'$my_nodename'", mode!="total", mode!="idle"}[5m]) or avg_over_time(node_cpu_average{node_name="'$my_nodename'", mode!="total", mode!="idle"}[5m]))),100))"
-
-    get_resource
+    
 }
