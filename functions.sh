@@ -79,6 +79,7 @@ get_memory_total > $log_folder/$1/$1_15_get_memory_total_log.json
 get_virt_memory_used > $log_folder/$1/$1_16_get_virt_memory_used_log.json
 get_virtual_memory_available > $log_folder/$1/$1_17_get_virtual_memory_available_log.json
 get_virtual_momory_total > $log_folder/$1/$1_18_get_virtual_momory_total_log.json
+get_cpu_exp > $log_folder/$1/$1_18_get_cpu_exp_log.json
 }
 
 
@@ -276,6 +277,12 @@ get_virtual_memory_available(){
 
 get_virtual_momory_total(){
     resourse_query="avg by (node_name) ((avg_over_time(node_memory_MemTotal_bytes{node_name="'$my_nodename'"}[5s]) or avg_over_time(node_memory_MemTotal_bytes{node_name="'$my_nodename'"}[5m])) + \n(avg_over_time(node_memory_SwapTotal_bytes{node_name="'$my_nodename'"}[5s]) or avg_over_time(node_memory_SwapTotal_bytes{node_name="'$my_nodename'"}[5m])))"
+
+    get_resource
+}
+
+get_cpu_exp(){
+    resourse_query="avg by (node_name,mode) (clamp_max(((avg by (mode,node_name) ( (clamp_max(rate(node_cpu_seconds_total{node_name="'$my_nodename'",mode!="idle"}[5m]),1)) or (clamp_max(irate(node_cpu_seconds_total{node_name="'$my_nodename'",mode!="idle"}[5m]),1)) ))*100 or (avg_over_time(node_cpu_average{node_name="'$my_nodename'", mode!="total", mode!="idle"}[5m]) or avg_over_time(node_cpu_average{node_name="'$my_nodename'", mode!="total", mode!="idle"}[5m]))),100))"
 
     get_resource
 }
