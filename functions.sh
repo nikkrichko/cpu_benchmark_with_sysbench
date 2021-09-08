@@ -400,7 +400,7 @@ get_swap_activity_in_read(){
 }
 
 
-get_io_total()){
+get_io_total(){
         curl -u admin:admin --location --request POST 'http://'$grafana_dns'/graph/api/datasources/proxy/1/api/v1/query_range' \
 --header 'accept: application/json, text/plain, */*' \
 --header 'x-grafana-org-id: 1' \
