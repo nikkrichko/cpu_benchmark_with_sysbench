@@ -28,6 +28,7 @@ end_ts=$(date +%s)
 }
 
 get_cpu_info(){
+echo "usage get_cpu_info() function is not recommended -- deprecated"
 curl -u admin:admin --location --request POST 'http://'$grafana_dns'/graph/api/datasources/proxy/1/api/v1/query_range' \
 --header 'accept: application/json, text/plain, */*' \
 --header 'x-grafana-org-id: 1' \
@@ -57,5 +58,72 @@ add_start_annotation $1 $2
 ($3) > $log_folder/$1/$1_sysbenchmark.log
 add_finish_annotation $1 $2
 
-get_cpu_info > $log_folder/$1/$1_cpu_01_log.json
+#get_cpu_info > $log_folder/$1/$1_cpu_01_log.json
+get_cpu_usage > $log_folder/$1/$1_01_get_cpu_usage_log.json
+get_cpu_max_util > $log_folder/$1/$1_02_get_cpu_max_util_log.json
+get_cpu_norm_load > $log_folder/$1/$1_03_get_cpu_norm_load_log.json
+get_cpu_max_core_util > $log_folder/$1/$1_04_get_cpu_max_core_util_log.json
+get_cpu_credit_usage > $log_folder/$1/$1_05_get_cpu_credit_usage_log.json
+}
+
+
+### Resource collection functions
+
+
+get_cpu_usage(){
+curl -u admin:admin --location --request POST 'http://'$grafana_dns'/graph/api/datasources/proxy/1/api/v1/query_range' \
+--header 'accept: application/json, text/plain, */*' \
+--header 'x-grafana-org-id: 1' \
+--header 'content-type: application/x-www-form-urlencoded' \
+--data-urlencode 'query=avg by (node_name,mode) (clamp_max(((avg by (mode,node_name) ( (clamp_max(rate(node_cpu_seconds_total{node_name="'$my_nodename'",mode!="idle"}[5m]),1)) or (clamp_max(irate(node_cpu_seconds_total{node_name="'$my_nodename'",mode!="idle"}[5m]),1)) ))*100 or (avg_over_time(node_cpu_average{node_name="'$my_nodename'", mode!="total", mode!="idle"}[5m]) or avg_over_time(node_cpu_average{node_name="'$my_nodename'", mode!="total", mode!="idle"}[5m]))),100))' \
+--data-urlencode 'end='$start_ts'' \
+--data-urlencode 'start='$end_ts'' \
+--data-urlencode 'step=10'
+}
+
+get_cpu_max_util(){
+    curl -u admin:admin --location --request POST 'http://'$grafana_dns'/graph/api/datasources/proxy/1/api/v1/query_range' \
+--header 'accept: application/json, text/plain, */*' \
+--header 'x-grafana-org-id: 1' \
+--header 'content-type: application/x-www-form-urlencoded' \
+--data-urlencode 'query=clamp_max(max by (node_name) (sum  by (cpu,node_name) ( (clamp_max(rate(node_cpu_seconds_total{node_name="'$my_nodename'",mode!="idle",mode!="iowait"}[5s]),1)) or (clamp_max(irate(node_cpu_seconds_total{node_name="'$my_nodename'",mode!="idle",mode!="iowait"}[5m]),1)) )),1)' \
+--data-urlencode 'end='$start_ts'' \
+--data-urlencode 'start='$end_ts'' \
+--data-urlencode 'step=10'
+}
+
+get_cpu_norm_load(){
+    curl -u admin:admin --location --request POST 'http://'$grafana_dns'/graph/api/datasources/proxy/1/api/v1/query_range' \
+--header 'accept: application/json, text/plain, */*' \
+--header 'x-grafana-org-id: 1' \
+--header 'content-type: application/x-www-form-urlencoded' \
+--data-urlencode 'query=avg by (node_name) ((avg_over_time(node_procs_running{node_name="'$my_nodename'"}[5s])-1) / scalar(count(node_cpu_seconds_total{mode="user", node_name="'$my_nodename'"})) or (avg_over_time(node_procs_running{node_name="'$my_nodename'"}[5m])-1) / scalar(count(node_cpu_seconds_total{mode="user", node_name="'$my_nodename'"})))' \
+--data-urlencode 'end='$start_ts'' \
+--data-urlencode 'start='$end_ts'' \
+--data-urlencode 'step=10'
+}
+
+
+
+get_cpu_max_core_util(){
+    curl -u admin:admin --location --request POST 'http://'$grafana_dns'/graph/api/datasources/proxy/1/api/v1/query_range' \
+--header 'accept: application/json, text/plain, */*' \
+--header 'x-grafana-org-id: 1' \
+--header 'content-type: application/x-www-form-urlencoded' \
+--data-urlencode 'query=clamp_max(max by (node_name) (sum  by (cpu,node_name) ( (clamp_max(rate(node_cpu_seconds_total{node_name="'$my_nodename'",mode!="idle",mode!="iowait"}[5s]),1)) or (clamp_max(irate(node_cpu_seconds_total{node_name="'$my_nodename'",mode!="idle",mode!="iowait"}[5m]),1)) )),1)' \
+--data-urlencode 'end='$start_ts'' \
+--data-urlencode 'start='$end_ts'' \
+--data-urlencode 'step=10'
+}
+
+
+get_cpu_credit_usage(){
+    curl -u admin:admin --location --request POST 'http://'$grafana_dns'/graph/api/datasources/proxy/1/api/v1/query_range' \
+--header 'accept: application/json, text/plain, */*' \
+--header 'x-grafana-org-id: 1' \
+--header 'content-type: application/x-www-form-urlencoded' \
+--data-urlencode 'query=avg by (node_name) (aws_rds_cpu_credit_usage_average{node_name="'$my_nodename'"})' \
+--data-urlencode 'end='$start_ts'' \
+--data-urlencode 'start='$end_ts'' \
+--data-urlencode 'step=10'
 }
