@@ -286,15 +286,13 @@ get_virtual_memory_available(){
 --data-urlencode 'step=10'
 }
 
-get_virtual_momory_total(){
+get_virtual_memory_total(){
         curl -u admin:admin --location --request POST 'http://'$grafana_dns'/graph/api/datasources/proxy/1/api/v1/query_range' \
 --header 'accept: application/json, text/plain, */*' \
 --header 'x-grafana-org-id: 1' \
 --header 'content-type: application/x-www-form-urlencoded' \
---data-urlencode 'avg by (node_name) ((avg_over_time(node_memory_MemTotal_bytes{node_name="'$my_nodename'"}[5s]) or avg_over_time(node_memory_MemTotal_bytes{node_name="'$my_nodename'"}[5m])) + \n(avg_over_time(node_memory_SwapTotal_bytes{node_name="'$my_nodename'"}[5s]) or avg_over_time(node_memory_SwapTotal_bytes{node_name="'$my_nodename'"}[5m])))' \
+--data-urlencode 'query=avg by (node_name) ((avg_over_time(node_memory_MemTotal_bytes{node_name="'$my_nodename'"}[5s]) or avg_over_time(node_memory_MemTotal_bytes{node_name="'$my_nodename'"}[5m])) + \n(avg_over_time(node_memory_SwapTotal_bytes{node_name="'$my_nodename'"}[5s]) or avg_over_time(node_memory_SwapTotal_bytes{node_name="'$my_nodename'"}[5m])))' \
 --data-urlencode 'end='$start_ts'' \
 --data-urlencode 'start='$end_ts'' \
 --data-urlencode 'step=10'
-
-    
 }
