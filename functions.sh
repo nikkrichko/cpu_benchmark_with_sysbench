@@ -102,8 +102,8 @@ get_disk_io_load_read > $log_folder/$1/$1_34_get_disk_io_load_read_log.json
 get_disk_io_load_write > $log_folder/$1/$1_35_get_disk_io_load_write_log.json
 get_disk_io_load_total > $log_folder/$1/$1_36_get_disk_io_load_total_log.json
 
-get_network_outbound > $log_folder/$1/$1_37_get_virtual_momory_total_log.json
-get_network_inbound > $log_folder/$1/$1_38_get_virtual_momory_total_log.json
+get_network_outbound > $log_folder/$1/$1_37_get_network_outbound_log.json
+get_network_inbound > $log_folder/$1/$1_38_get_network_inbound_total_log.json
 
 get_network_err_recieve > $log_folder/$1/$1_39_get_network_err_recieve_log.json
 get_network_err_transmit > $log_folder/$1/$1_40_get_network_err_transmit_log.json
@@ -264,7 +264,7 @@ get_memory_cache(){
 --header 'accept: application/json, text/plain, */*' \
 --header 'x-grafana-org-id: 1' \
 --header 'content-type: application/x-www-form-urlencoded' \
---data-urlencode 'query=avg by (node_name) (avg(avg_over_time(node_memory_Cached_bytes{node_name="'$my_nodename'",job=~\"rds.*|node.*\"}[5s]) or avg_over_time(node_memory_Cached_bytes{node_name="'$my_nodename'",job=~\"rds.*|node.*\"}[5m])) without (job))' \
+--data-urlencode 'query=avg by (node_name) (avg(avg_over_time(node_memory_Cached_bytes{node_name="'$my_nodename'",job="rds.*|node.*"}[5s]) or avg_over_time(node_memory_Cached_bytes{node_name="'$my_nodename'",job="rds.*|node.*"}[5m])) without (job))' \
 --data-urlencode 'end='$start_ts'' \
 --data-urlencode 'start='$end_ts'' \
 --data-urlencode 'step=10'
@@ -301,7 +301,7 @@ get_virt_memory_used(){
 --header 'accept: application/json, text/plain, */*' \
 --header 'x-grafana-org-id: 1' \
 --header 'content-type: application/x-www-form-urlencoded' \
---data-urlencode 'query=avg by (node_name) (((avg_over_time(node_memory_MemTotal_bytes{node_name=\"$node_name\"}[5s]) or avg_over_time(node_memory_MemTotal_bytes{node_name=\"$node_name\"}[5m])) +(avg_over_time(node_memory_SwapTotal_bytes{node_name=\"$node_name\"}[5s]) or avg_over_time(node_memory_SwapTotal_bytes{node_name=\"$node_name\"}[5m]))) -((avg_over_time(node_memory_SwapFree_bytes{node_name=\"$node_name\"}[5s]) or avg_over_time(node_memory_SwapFree_bytes{node_name=\"$node_name\"}[5m])) + ((avg_over_time(node_memory_MemAvailable_bytes{node_name=\"$node_name\"}[5s]) or avg_over_time(node_memory_MemAvailable_bytes{node_name=\"$node_name\"}[5m])) or ((avg_over_time(node_memory_MemFree_bytes{node_name=\"$node_name\"}[5s]) or avg_over_time(node_memory_MemFree_bytes{node_name=\"$node_name\"}[5m]))+(avg_over_time(node_memory_Buffers_bytes{node_name=\"$node_name\"}[5s]) or avg_over_time(node_memory_Buffers_bytes{node_name=\"$node_name\"}[5m]))+(avg_over_time(node_memory_Cached_bytes{node_name=\"$node_name\"}[5s]) or avg_over_time(node_memory_Cached_bytes{node_name=\"$node_name\"}[5m]))))))' \
+--data-urlencode 'query=avg by (node_name) (((avg_over_time(node_memory_MemTotal_bytes{node_name="'$node_name'"}[5s]) or avg_over_time(node_memory_MemTotal_bytes{node_name="'$node_name'"}[5m])) +(avg_over_time(node_memory_SwapTotal_bytes{node_name="'$node_name'"[5s]) or avg_over_time(node_memory_SwapTotal_bytes{node_name="'$node_name'"}[5m]))) -((avg_over_time(node_memory_SwapFree_bytes{node_name="'$node_name'"}[5s]) or avg_over_time(node_memory_SwapFree_bytes{node_name="'$node_name'"}[5m])) + ((avg_over_time(node_memory_MemAvailable_bytes{node_name="'$node_name'"}[5s]) or avg_over_time(node_memory_MemAvailable_bytes{node_name="'$node_name'"}[5m])) or ((avg_over_time(node_memory_MemFree_bytes{node_name="'$node_name'"}[5s]) or avg_over_time(node_memory_MemFree_bytes{node_name="'$node_name'"}[5m]))+(avg_over_time(node_memory_Buffers_bytes{node_name="'$node_name'"}[5s]) or avg_over_time(node_memory_Buffers_bytes{node_name="'$node_name'"}[5m]))+(avg_over_time(node_memory_Cached_bytes{node_name="'$node_name'"}[5s]) or avg_over_time(node_memory_Cached_bytes{node_name="'$node_name'"}[5m]))))))' \
 --data-urlencode 'end='$start_ts'' \
 --data-urlencode 'start='$end_ts'' \
 --data-urlencode 'step=10'
@@ -313,7 +313,7 @@ get_virtual_memory_available(){
 --header 'accept: application/json, text/plain, */*' \
 --header 'x-grafana-org-id: 1' \
 --header 'content-type: application/x-www-form-urlencoded' \
---data-urlencode 'query=avg by (node_name) ((avg_over_time(node_memory_SwapFree_bytes{node_name=\"$node_name\"}[5s]) or avg_over_time(node_memory_SwapFree_bytes{node_name=\"$node_name\"}[5m])) + ((avg_over_time(node_memory_MemAvailable_bytes{node_name=\"$node_name\"}[5s]) or avg_over_time(node_memory_MemAvailable_bytes{node_name=\"$node_name\"}[5m])) or ((avg_over_time(node_memory_MemFree_bytes{node_name=\"$node_name\"}[5s]) or avg_over_time(node_memory_MemFree_bytes{node_name=\"$node_name\"}[5m]))+(avg_over_time(node_memory_Buffers_bytes{node_name=\"$node_name\"}[5s]) or avg_over_time(node_memory_Buffers_bytes{node_name=\"$node_name\"}[5m]))+(avg_over_time(node_memory_Cached_bytes{node_name=\"$node_name\"}[5s]) or avg_over_time(node_memory_Cached_bytes{node_name=\"$node_name\"}[5m])))))' \
+--data-urlencode 'query=avg by (node_name) ((avg_over_time(node_memory_SwapFree_bytes{node_name="'$node_name'"}[5s]) or avg_over_time(node_memory_SwapFree_bytes{node_name="'$node_name'"}[5m])) + ((avg_over_time(node_memory_MemAvailable_bytes{node_name="'$node_name'"}[5s]) or avg_over_time(node_memory_MemAvailable_bytes{node_name="'$node_name'"}[5m])) or ((avg_over_time(node_memory_MemFree_bytes{node_name"'$node_name'"}[5s]) or avg_over_time(node_memory_MemFree_bytes{node_name="'$node_name'"}[5m]))+(avg_over_time(node_memory_Buffers_bytes{node_name="'$node_name'"}[5s]) or avg_over_time(node_memory_Buffers_bytes{node_name="'$node_name'"}[5m]))+(avg_over_time(node_memory_Cached_bytes{node_name="'$node_name'"}[5s]) or avg_over_time(node_memory_Cached_bytes{node_name="'$node_name'"}[5m])))))' \
 --data-urlencode 'end='$start_ts'' \
 --data-urlencode 'start='$end_ts'' \
 --data-urlencode 'step=10'
@@ -540,7 +540,7 @@ get_network_outbound(){
 --header 'accept: application/json, text/plain, */*' \
 --header 'x-grafana-org-id: 1' \
 --header 'content-type: application/x-www-form-urlencoded' \
---data-urlencode 'query=sum by (node_name) (rate(node_network_transmit_bytes_total{node_name="'$my_nodename'", device!=\"lo\"}[5s])) or sum by (node_name) (irate(node_network_transmit_bytes_total{node_name="'$my_nodename'", device!=\"lo\"}[5m])) or sum by (node_name) (max_over_time(rdsosmetrics_network_tx{node_name="'$my_nodename'"}[5s])) or sum by (node_name) (max_over_time(rdsosmetrics_network_tx{node_name="'$my_nodename'"}[5m]))' \
+--data-urlencode 'query=sum by (node_name) (rate(node_network_transmit_bytes_total{node_name="'$my_nodename'", device!="lo"}[5s])) or sum by (node_name) (irate(node_network_transmit_bytes_total{node_name="'$my_nodename'", device!="lo"}[5m])) or sum by (node_name) (max_over_time(rdsosmetrics_network_tx{node_name="'$my_nodename'"}[5s])) or sum by (node_name) (max_over_time(rdsosmetrics_network_tx{node_name="'$my_nodename'"}[5m]))' \
 --data-urlencode 'end='$start_ts'' \
 --data-urlencode 'start='$end_ts'' \
 --data-urlencode 'step=10'
@@ -551,7 +551,7 @@ get_network_inbound(){
 --header 'accept: application/json, text/plain, */*' \
 --header 'x-grafana-org-id: 1' \
 --header 'content-type: application/x-www-form-urlencoded' \
---data-urlencode 'query=sum by (node_name) (rate(node_network_receive_bytes_total{node_name="'$my_nodename'", device!=\"lo\"}[5s])) or sum by (node_name) (irate(node_network_receive_bytes_total{node_name="'$my_nodename'", device!=\"lo\"}[5m])) or sum by (node_name) (max_over_time(rdsosmetrics_network_rx{node_name="'$my_nodename'"}[5s])) or sum by (node_name) (max_over_time(rdsosmetrics_network_rx{node_name="'$my_nodename'"}[5m]))' \
+--data-urlencode 'query=sum by (node_name) (rate(node_network_receive_bytes_total{node_name="'$my_nodename'", device!="lo"}[5s])) or sum by (node_name) (irate(node_network_receive_bytes_total{node_name="'$my_nodename'", device!="lo"}[5m])) or sum by (node_name) (max_over_time(rdsosmetrics_network_rx{node_name="'$my_nodename'"}[5s])) or sum by (node_name) (max_over_time(rdsosmetrics_network_rx{node_name="'$my_nodename'"}[5m]))' \
 --data-urlencode 'end='$start_ts'' \
 --data-urlencode 'start='$end_ts'' \
 --data-urlencode 'step=10'
@@ -563,7 +563,7 @@ get_network_err_recieve(){
 --header 'accept: application/json, text/plain, */*' \
 --header 'x-grafana-org-id: 1' \
 --header 'content-type: application/x-www-form-urlencoded' \
---data-urlencode 'query=sum by (node_name) (rate(node_network_receive_errs_total{node_name="'$my_nodename'", device!=\"lo\"}[5s])) or sum by (node_name) (irate(node_network_receive_errs_total{node_name="'$my_nodename'", device!=\"lo\"}[5m]))' \
+--data-urlencode 'query=sum by (node_name) (rate(node_network_receive_errs_total{node_name="'$my_nodename'", device!="lo"}[5s])) or sum by (node_name) (irate(node_network_receive_errs_total{node_name="'$my_nodename'", device!="lo"}[5m]))' \
 --data-urlencode 'end='$start_ts'' \
 --data-urlencode 'start='$end_ts'' \
 --data-urlencode 'step=10'
@@ -574,7 +574,7 @@ get_network_err_transmit(){
 --header 'accept: application/json, text/plain, */*' \
 --header 'x-grafana-org-id: 1' \
 --header 'content-type: application/x-www-form-urlencoded' \
---data-urlencode 'query=sum by (node_name) (rate(node_network_transmit_errs_total{node_name="'$my_nodename'", device!=\"lo\"}[5s])) or sum by (node_name) (irate(node_network_transmit_errs_total{node_name="'$my_nodename'", device!=\"lo\"}[5m]))' \
+--data-urlencode 'query=sum by (node_name) (rate(node_network_transmit_errs_total{node_name="'$my_nodename'", device!="lo"}[5s])) or sum by (node_name) (irate(node_network_transmit_errs_total{node_name="'$my_nodename'", device!="lo"}[5m]))' \
 --data-urlencode 'end='$start_ts'' \
 --data-urlencode 'start='$end_ts'' \
 --data-urlencode 'step=10'
@@ -585,7 +585,7 @@ get_network_err_recieve_drop(){
 --header 'accept: application/json, text/plain, */*' \
 --header 'x-grafana-org-id: 1' \
 --header 'content-type: application/x-www-form-urlencoded' \
---data-urlencode 'query=sum by (node_name) (rate(node_network_receive_drop_total{node_name="'$my_nodename'", device!=\"lo\"}[5s])) or sum by (node_name) (irate(node_network_receive_drop_total{node_name="'$my_nodename'", device!=\"lo\"}[5m]))' \
+--data-urlencode 'query=sum by (node_name) (rate(node_network_receive_drop_total{node_name="'$my_nodename'", device!="lo"}[5s])) or sum by (node_name) (irate(node_network_receive_drop_total{node_name="'$my_nodename'", device!="lo"}[5m]))' \
 --data-urlencode 'end='$start_ts'' \
 --data-urlencode 'start='$end_ts'' \
 --data-urlencode 'step=10'
@@ -596,7 +596,7 @@ get_network_err_transmit_drop(){
 --header 'accept: application/json, text/plain, */*' \
 --header 'x-grafana-org-id: 1' \
 --header 'content-type: application/x-www-form-urlencoded' \
---data-urlencode 'query=sum by (node_name) (rate(node_network_transmit_drop_total{node_name="'$my_nodename'", device!=\"lo\"}[5s])) or sum by (node_name) (irate(node_network_transmit_drop_total{node_name="'$my_nodename'", device!=\"lo\"}[5m]))' \
+--data-urlencode 'query=sum by (node_name) (rate(node_network_transmit_drop_total{node_name="'$my_nodename'", device!="lo"}[5s])) or sum by (node_name) (irate(node_network_transmit_drop_total{node_name="'$my_nodename'", device!="lo"}[5m]))' \
 --data-urlencode 'end='$start_ts'' \
 --data-urlencode 'start='$end_ts'' \
 --data-urlencode 'step=10'
