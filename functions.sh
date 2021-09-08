@@ -39,6 +39,7 @@ sudo systemctl stop apache2
 sudo chmod 777 /var/www/html/index.html
 sudo echo "<br><br><font color='green'>$datetime -->> $1" >> /var/www/html/index.html
 sudo systemctl start apache2
+sleep 3
 }
 
 
