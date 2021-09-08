@@ -44,7 +44,7 @@ sudo systemctl start apache2
 
 
 run_test(){
-sudo mkdir -v $log_folder/$1
+sudo mkdir -vp $log_folder/$1
 sudo chmod 777 $log_folder/$1
 
 add_start_annotation $1 $2
