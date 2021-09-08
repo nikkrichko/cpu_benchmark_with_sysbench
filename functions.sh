@@ -254,7 +254,7 @@ get_resource(){
 --header 'accept: application/json, text/plain, */*' \
 --header 'x-grafana-org-id: 1' \
 --header 'content-type: application/x-www-form-urlencoded' \
---data-urlencode 'query=$resourse_query' \
+--data-urlencode 'query='$resourse_query'' \
 --data-urlencode 'end='$start_ts'' \
 --data-urlencode 'start='$end_ts'' \
 --data-urlencode 'step=10'
