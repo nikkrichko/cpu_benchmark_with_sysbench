@@ -1,5 +1,10 @@
 #!/bin/bash
 
+
+mysql_stat(){
+echo $(service --status-all | grep mysql)
+echo $(mysqld --version)
+}
 hello(){
   echo "hello world!"
 }
