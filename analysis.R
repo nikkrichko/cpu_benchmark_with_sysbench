@@ -5,6 +5,12 @@ library(data.table)
 library(rlist)
 library(tictoc)
 library(tidyverse)
+library(future)
+library(furrr)
+library(parallel)
+library(foreach)
+library(doParallel)
+library(tictoc)
 
 options(digits.secs = 3)  
 options(scipen = 999)
@@ -13,6 +19,29 @@ options(scipen = 999)
 main_path <- paste(getwd(),"/logs", sep="")
 
 path_to_cpu_info <- paste(dir_name,"/cpu_info.txt",sep="")
+
+convert_ts_to_dt_par <- function(input_dt){
+  ncores <-  detectCores(logical = FALSE)
+  mac_cluster <- makeCluster(ncores)
+  doParallel::registerDoParallel(mac_cluster)
+  tic("do some parralel stuff")
+  pack <- c("elasticsearchr","tidyverse","data.table","lubridate","tictoc")
+  par_result <- foreach(i=seq_along(1:NROW(input_dt)), .packages=pack) %dopar% {
+    temp_val <-  input_dt[i]$values %>% as.data.table() %>% 
+      setnames(c("V1","V2"), c("timestamp", "value"))
+    temp_val$id_core <- i
+    temp_val$value <- as.numeric(temp_val$value)
+    cbind(input_dt[i,!"values"],temp_val)
+  }
+  toc()
+  stopCluster(mac_cluster)
+  
+  
+  # tic("join data took:")
+  result_dt <- rbindlist(par_result, use.names = TRUE, fill = TRUE)
+  result_dt[,":="(timestamp=round(as.numeric(sub("\\.(.*)","", timestamp))/10)*10)]
+  result_dt
+}
 
 cpu_info <- function(path_to_cpu_info){
   cpu_lines <- read_lines(path_to_cpu_info)
