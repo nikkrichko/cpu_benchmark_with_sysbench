@@ -29,7 +29,7 @@ save_plot <- function(file_path_name,plot_to_save){
   }
 }
 
-add_dr_logo <- function(input_gg_plot,path_to_file){
+add_logo <- function(input_gg_plot,path_to_file){
   require(magick)
   require(cowplot)
   logo_img <- image_read(path_to_file)) 
