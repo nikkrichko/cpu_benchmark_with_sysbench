@@ -20,6 +20,25 @@ main_path <- paste(getwd(),"/logs", sep="")
 
 path_to_cpu_info <- paste(dir_name,"/cpu_info.txt",sep="")
 
+
+save_plot <- function(file_path_name,plot_to_save){
+  if(!is.null(file_path_name)){
+    fileName_to_save <- paste(file_path_name,".png",sep="")
+    ggsave(fileName_to_save,plot_to_save,width = 16, height = 9, dpi = 350, units = "in", device='png')
+    print(paste("plot successfully saved:",fileName_to_save))
+  }
+}
+
+add_dr_logo <- function(input_gg_plot,path_to_file){
+  require(magick)
+  require(cowplot)
+  logo_img <- image_read(path_to_file)) 
+  input_gg_plot <- ggdraw() + 
+    draw_plot(input_gg_plot,x = 0, y = 0.025, width = 1, height = .97)+
+    draw_image(logo_img,x = 0.8, y = 0.88, width = 0.15, height = 0.15)
+  input_gg_plot
+}
+
 convert_ts_to_dt_par <- function(input_dt){
   ncores <-  detectCores(logical = FALSE)
   mac_cluster <- makeCluster(ncores)
