@@ -465,7 +465,7 @@ ggplot(CPU_latency_big,aes(x=as.factor(variable),
   scale_y_log10()
 
 template_gplot<- function(dt){
-  
+  dt[,"hms":=lubridate::as_datetime(timestamp)]
   min_datetime <- min(dt$hms)
   max_datetime <- max(dt$hms)
   time_breaks <- seq(min_datetime,max_datetime,10) %>% unique() %>% .[matches("(:00:0|:30:0)", vars=.)] %>% sort()
