@@ -464,4 +464,36 @@ ggplot(CPU_latency_big,aes(x=as.factor(variable),
                                    hjust=1)) + 
   scale_y_log10()
 
-
+template_gplot<- function(dt){
+  
+  min_datetime <- min(dt$hms)
+  max_datetime <- max(dt$hms)
+  time_breaks <- seq(min_datetime,max_datetime,10) %>% unique() %>% .[matches("(:00:0|:30:0)", vars=.)] %>% sort()
+  
+  
+  min_y_break <- min(pods_ps$N)-20
+  if(min_y_break < 0) {min_y_break <- 0}
+  max_y_break <- max(pods_ps$N)+50
+  generated_y_breaks <- seq(min_y_break,max_y_break,10)
+  
+  
+  title_generated <- ""
+  subtitle_generated <- paste("for period: ",min_datetime, " - ", max_datetime,"\n", sep="" )
+  caption_generated <- "Information collected from grafana web api "
+  
+  
+  result_plot <- ggplot(dt, aes(x=hms, y=N,color=can_use_spot)) + 
+    geom_line() + 
+    geom_point(size=.8) +
+    scale_x_datetime(breaks=time_breaks) + 
+    scale_y_continuous(breaks = generated_y_breaks,limits = c(0, max_y_break)) +
+    labs(x="",
+         y="",
+         title=title_generated,
+         subtitle = subtitle_generated,
+         caption = caption_generated,
+         color = "") + 
+    theme(axis.text.x = element_text(angle = 45, vjust = 0.9, hjust=1),
+          axis.text.y = element_text(angle = -45, vjust = 0.9, hjust=1, size=6))
+  result_plot
+}
